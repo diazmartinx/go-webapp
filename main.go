@@ -15,6 +15,7 @@ func main() {
 	models.MigrateItem()
 	models.MigrateCategory()
 	models.MigrateList()
+	models.MigrateHistory()
 
 	router = gin.Default()
 

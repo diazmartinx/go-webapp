@@ -56,9 +56,10 @@
             <button class="font-bold" x-transition:enter.duration.500ms x-show="!open" x-on:click="open = ! open"
             @click="$nextTick(() => { setTimeout(() => { document.getElementById('input_item{{.ID}}').focus(); }, 300);});"
             >+ item</button>
-
+            
             <form x-transition:enter.duration.500ms x-show="open" hx-post="/{{.Url}}/item/{{.ID}}" hx-swap="beforeend" hx-target="#Item{{.ID}}">
                 <input class="iteminput" type="text" name="name" id="input_item{{.ID}}" required>
+                <input type="hidden" name="categoryName" value="{{.Name}}">
                 <button type="button" x-on:click="open = ! open">✖️</button>
                 <button type="submit" x-on:click="open = ! open">✔️</button>
             </form>

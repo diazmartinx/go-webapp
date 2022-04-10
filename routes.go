@@ -13,7 +13,7 @@ func initializeRoutes() {
 	// ITEM CRUD
 	router.POST("/:url/item/:idcat", Item)
 	router.DELETE("/:url/item/:iditem", Item)
-	router.PUT("/:url/item/:iditem", Item)   // CHANGE NAME.
+	router.PUT("/:url/item/:iditem", Item)   // CHANGE NAME
 	router.PATCH("/:url/item/:iditem", Item) // CHANGE DONE
 
 }

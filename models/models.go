@@ -10,6 +10,7 @@ type List struct {
 	gorm.Model
 	Url        string
 	Categories []Category `gorm:"foreignkey:Url;references:Url"`
+	//Histories  []History  `gorm:"foreignkey:Url;references:Url"` DIDNT WORK ? ;C
 }
 
 type Category struct {
@@ -27,6 +28,14 @@ type Item struct {
 	CategoryID uint
 }
 
+type History struct {
+	ID         int `gorm:"primaryKey"`
+	Url        string
+	Title      string
+	Changed    int64 // in miliseconds, then converted to javascript time in frontend
+	TypeChange int   // 0(created) // 1(updated) // 2(deleted) // 3(done)
+}
+
 func MigrateCategory() {
 	db.DB.AutoMigrate(&Category{})
 }
@@ -37,4 +46,8 @@ func MigrateList() {
 
 func MigrateItem() {
 	db.DB.AutoMigrate(&Item{})
+}
+
+func MigrateHistory() {
+	db.DB.AutoMigrate(&History{})
 }

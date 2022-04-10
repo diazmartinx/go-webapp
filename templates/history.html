@@ -1,4 +1,29 @@
-<div class="flex mb-1 flex-row justify-between p-2 bg-green-100 border-l-4 border-green-500">
-    <div>{{.Name}}</div>
-    <div>30min ago ⌛</div>
+{{ if eq .TypeChange 1 }} <!-- UPDATED YELLOW-->
+
+<div class="text-yellow-600 font-medium flex mb-1 flex-row justify-between p-2 bg-yellow-100 border-l-4 border-yellow-500">
+    <div>{{ .Title }}</div>
+    <div class="text-sm text-gray-700" x-data=" { time : timeSince( {{ .Changed }} )  }" x-text="time" x-init="setInterval(() => time = timeSince( {{ .Changed }} ), 10000)"></div>
 </div>
+
+{{ else if eq .TypeChange 2 }} <!-- DELETED RED-->
+
+<div class="text-red-600 font-medium flex mb-1 flex-row justify-between p-2 bg-red-100 border-l-4 border-red-500">
+    <div>{{ .Title }}</div>
+    <div class="text-sm text-gray-700" x-data=" { time : timeSince( {{ .Changed }} )  }" x-text="time" x-init="setInterval(() => time = timeSince( {{ .Changed }} ), 10000)"></div>
+</div>
+
+{{ else if eq .TypeChange 0 }} <!-- CREATED GRAY-->
+
+<div class="text-gray-600 font-medium flex mb-1 flex-row justify-between p-2 bg-gray-100 border-l-4 border-gray-500">
+    <div>{{ .Title }}</div>
+    <div class="text-sm text-gray-700" x-data=" { time : timeSince( {{ .Changed }} )  }" x-text="time" x-init="setInterval(() => time = timeSince( {{ .Changed }} ), 10000)"></div>
+</div>
+
+{{ else if eq .TypeChange 3 }} <!-- COMPLETED GREEN-->
+
+<div class="text-green-600 font-medium flex mb-1 flex-row justify-between p-2 bg-green-100 border-l-4 border-green-500">
+    <div>{{ .Title }}</div>
+    <div class="text-sm text-green-700" x-data=" { time : timeSince( {{ .Changed }} )  }" x-text="time" x-init="setInterval(() => time = timeSince( {{ .Changed }} ), 10000)"></div>
+</div>
+
+{{ end }}
