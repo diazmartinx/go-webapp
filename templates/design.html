@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <title>List 📝</title>
+</head>
+<body class="bg-gray-50 w-screen h-screen">
+
+    <div class="m-auto max-w-xl p-3">
+
+       <section class="border-b py-3">
+
+        
+
+        
+        
+        <div class="flex flex-row justify-between">
+
+            <h3>🥦 Veggies </h3>
+
+            <div>
+                <button >✏️</button>
+                <button>❌</button>
+            </div>
+        </div>
+    
+        <div class="flex flex-row justify-between ml-7">
+            <h3>◾ Item 1</h3>
+
+            <div>
+                <button>✔️</button>
+                <button>✖️</button>
+            </div>
+        </div>
+
+        <div class="flex flex-row justify-between ml-7">
+            <h3>◾ Item 1</h3>
+
+            <div>
+                <button>✔️</button>
+                <button>✖️</button>
+            </div>
+        </div>
+       </section>
+
+       
+
+       <section class="border-b py-3">
+        <div class="flex flex-row justify-between">
+
+            <h3>🛒 Groceries </h3>
+
+            <div>
+                <button>✏️</button>
+                <button>❌</button>
+            </div>
+        </div>
+    
+        <div class="flex flex-row justify-between ml-7">
+            <h3>◾ Item 1</h3>
+
+            <div>
+                <button>✔️</button>
+                <button>✖️</button>
+            </div>
+        </div>
+
+        <div class="flex flex-row justify-between ml-7">
+            <h3>◾ Item 1</h3>
+
+            <div>
+                <button>✔️</button>
+                <button>✖️</button>
+            </div>
+        </div>
+       </section>
+
+       <section x-data="{ open: false }">
+
+        <button x-on:click="open = ! open">Add Category</button>
+
+        <form @submit.prevent x-show="open" action="" x-transition.duration.500ms>
+             <input type="text" name="name" id="input_cat">
+             <button>✔️</button>
+             <button x-on:click="open = ! open">✖️</button>
+        </form>
+    </section>
+
+       <section class="mt-10" x-transition.duration.500ms>
+
+        <div class="flex mb-1 flex-row justify-between p-2 bg-green-100 border-l-4 border-green-500">
+            <div>Item 13 from 🥦 Veggies</div>
+            <div>30min ago ⌛</div>
+        </div>
+           <div class="flex flex-row mb-1 justify-between p-2 bg-green-100 border-l-4 border-green-500">
+               <div>Item 13 from 🥦 Veggies</div>
+               <div>30min ago ⌛</div>
+           </div>
+
+           <div class="flex flex-row mb-1 justify-between p-2 bg-red-100 border-l-4 border-red-500">
+            <div>Item 2 from 🛒 Groceries</div>
+            <div>4hs ago ⌛</div>
+        </div>
+
+       </section>
+              
+    </div>
+    
+</body>
+</html>
+
+<script>
+    
+</script>

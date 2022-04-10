@@ -1,0 +1,59 @@
+{{ template "header.html" .}}
+
+    <div class="m-auto max-w-xl p-3">
+
+        <div id="list">
+
+            {{ range .list.Categories}}
+    
+                {{ template "category.html" . }}
+                
+            {{end}}
+    
+        </div>
+
+        <div x-data="{ open: false }" class="flex flex-row justify-between mt-5">
+
+            <button class="font-bold" x-transition:enter.duration.500ms x-show="!open" x-on:click="open = ! open"
+            @click="$nextTick(() => { setTimeout(() => { document.getElementById('input_cat').focus(); }, 300);});"
+            >+ Category</button>
+
+            <form x-transition:enter.duration.500ms x-show="open" hx-post="/{{.list.Url}}/category" hx-target="#list" hx-swap="beforeend">
+                <input type="text" name="name" id="input_cat" required>
+                <button type="button" x-on:click="open = ! open">✖️</button>
+                <button type="submit" x-on:click="open = ! open">✔️</button>
+            </form>
+        
+        </div>
+    
+        <section id="History" class="mt-10" x-transition.duration.500ms>
+
+            {{ range .history }}
+    
+                {{ template "history.html" . }}
+                
+            {{end}}
+    
+           </section>
+    </div>
+
+    
+
+    <script>
+
+        document.body.addEventListener('htmx:afterRequest', (event) => {
+            var elements = document.getElementsByTagName("input");
+            for (var ii=0; ii < elements.length; ii++) {
+            if (elements[ii].type == "text" && elements[ii].classList.contains("iteminput")) {
+                elements[ii].value = "";
+            }
+            }
+        })
+
+
+        document.body.addEventListener('htmx:afterRequest', (event) => {
+            document.getElementById('input_cat').value = '';
+        })
+    </script>
+
+{{ template "footer.html" .}}
