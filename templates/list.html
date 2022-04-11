@@ -26,15 +26,11 @@
         
         </div>
     
-        <section id="History" class="mt-10" x-transition.duration.500ms>
-
+        <section id="History" class="mt-10">
             {{ range .histories }}
-    
-                {{ template "history.html" . }}
-                
+                {{ template "history.html" .}}
             {{end}}
-    
-           </section>
+        </section>
     </div>
 
     
@@ -48,11 +44,16 @@
                 elements[ii].value = "";
             }
             }
+
+            document.getElementById('input_cat').value = '';
         })
 
-
+        // ADD ITEM TO HISTORY
         document.body.addEventListener('htmx:afterRequest', (event) => {
-            document.getElementById('input_cat').value = '';
+            console.log(event.detail.target)
+            if (event.detail.target.id != 'History') {
+                htmx.ajax('GET', '/{{.list.Url}}/history', {target:'#History', swap:'afterbegin'})
+            }            
         })
     </script>
 

@@ -56,6 +56,15 @@ func ShowList(c *gin.Context) {
 
 }
 
+func History(c *gin.Context) {
+	url := c.Param("url")
+	var history models.History
+
+	db.DB.Where("url = ?", url).Order("changed desc").First(&history)
+
+	c.HTML(http.StatusOK, "history.html", history)
+}
+
 func Category(c *gin.Context) {
 
 	url := c.Param("url")
