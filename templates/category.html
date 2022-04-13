@@ -1,6 +1,6 @@
 <section class="border-b py-3">
 
-    <div class="flex flex-row justify-between p-2 hover:bg-gray-200">
+    <div class="flex flex-row justify-between py-2 hover:bg-gray-200">
 
         <div class="flex flex-row" x-data="{ open: false }" @set-open{{.ID}}.window="open = $event.detail">
 
@@ -9,8 +9,7 @@
             <form x-transition:enter hx-put="/{{.Url}}/category/{{.ID}}" x-show="open" hx-target="closest section" hx-swap="outerHTML" >
                 <div class="flex flex-row">
                     <input id="updateCat{{.ID}}" type="text" name="name" value="{{.Name}}"
-                    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded 
-                    w-full py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
+                    class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-gray-600 peer"
                     >
 
                     <button type="button"  @click="$dispatch('set-open{{.ID}}', true); open = !open;">❌</button>
@@ -42,9 +41,9 @@
 
         <div id="Item{{.ID}}">
         {{ range .Items }}
-            {{ if eq .Done false }}
-                {{ template "item.html" . }}
-            {{ end }}            
+            
+            {{ template "item.html" . }}
+          
         {{ end }}
 
         </div>
@@ -57,8 +56,10 @@
             @click="$nextTick(() => { setTimeout(() => { document.getElementById('input_item{{.ID}}').focus(); }, 300);});"
             >+ item</button>
             
-            <form x-transition:enter.duration.500ms x-show="open" hx-post="/{{.Url}}/item/{{.ID}}" hx-swap="beforeend" hx-target="#Item{{.ID}}">
-                <input class="iteminput" type="text" name="name" id="input_item{{.ID}}" required>
+            <form class="flex" x-transition:enter.duration.500ms x-show="open" hx-post="/{{.Url}}/item/{{.ID}}" hx-swap="beforeend" hx-target="#Item{{.ID}}">
+                <input type="text" name="name" id="input_item{{.ID}}" required
+                class="iteminput block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-gray-600 peer"
+                >
                 <input type="hidden" name="categoryName" value="{{.Name}}">
                 <button type="button" x-on:click="open = ! open">✖️</button>
                 <button type="submit" x-on:click="open = ! open">✔️</button>

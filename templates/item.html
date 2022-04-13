@@ -1,15 +1,18 @@
-<article x-transition x-data="{ done: {{.Done}} }" x-show="!done" class="p-2 hover:bg-gray-100">
+{{ if eq .Done false }}
+<article x-transition x-data="{ done: {{.Done}} }" x-show="!done" class="py-2 hover:bg-gray-100">
     <div class="flex flex-row justify-between ml-2">
 
         <h3>◾ {{.Name}}</h3>
     
-        <div>
+        <div class="flex flex-row">   
+            <button class="text-sm text-green-700" x-data=" { time : timeSince( {{ .CreatedMilis }} )  }" x-text="time" x-init="setInterval(() => time = timeSince( {{ .CreatedMilis }} ), 10000)"></button>&nbsp;
     
             <button x-on:click="done = ! done" class="hover:bg-gray-300" hx-patch="/{{.Url}}/item/{{.ID}}" hx-swap="afterbegin" hx-target="#History">✔️</button>
     
-            <button class="hover:bg-gray-300" hx-delete="/{{.Url}}/item/{{.ID}}" hx-target="closest article" hx-swap="delete">✖️</button>
-    
+            <button class="hover:bg-gray-300" hx-delete="/{{.Url}}/item/{{.ID}}" hx-target="closest article" hx-swap="delete">✖️</button> 
         </div>
     
     </div>
 </article>
+{{ end }}
+

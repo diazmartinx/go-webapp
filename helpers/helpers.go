@@ -1,6 +1,8 @@
 package helpers
 
 import (
+	"app/db"
+	"app/models"
 	"crypto/rand"
 	"math/big"
 )
@@ -29,4 +31,20 @@ func GenerateRandomString(length int) string {
 		s += chars[randint()]
 	}
 	return s
+}
+
+type Stats struct {
+	Lists          int64
+	Categories     int64
+	Items          int64
+	ItemsCheked    int64
+	ItemsDestroyed int64
+}
+
+func CountStats() Stats {
+	var stats Stats
+	db.DB.Model(&models.List{}).Count(&stats.Lists)
+	db.DB.Model(&models.Category{}).Count(&stats.Categories)
+	db.DB.Model(&models.Item{}).Count(&stats.Items)
+	return stats
 }

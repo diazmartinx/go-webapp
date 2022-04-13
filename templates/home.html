@@ -1,7 +1,53 @@
 {{ template "header.html" .}}
 
-    <form action="/" method="POST">
-        <button>asd</button>
+    <main class="mx-auto h-full max-w-xl px-3 w-full flex-grow">
+
+    <section class="flex flex-col text-center py-5">
+        <h1 class="font-black">FREE SHAREABLE GROCERY LISTS</h1>
+        <h3>No Login Required</h3>
+    </section>
+
+    <form class="text-center" action="/" method="POST" id="FirstList">
+        <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-xl font-medium text-gray-900 rounded group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+            <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-gray-50 rounded-sm group-hover:bg-opacity-0">
+                🛠️ Create List 📋
+            </span>
+          </button>
     </form>
 
+    <div x-data=" { lists: JSON.parse(localStorage.getItem('lists')) } " class="text-center py-5">
+
+        <template x-if="lists[0] != 1">
+            <h1 class="font-bold pb-5">Some lists that you created</h1>
+        </template>
+       
+        <template x-for="list in lists">
+
+            <template x-if="list != 1">
+                <a  x-bind:href="'/' + list">
+                    <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+                        <span x-text="list" class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-gray-50 rounded-sm group-hover:bg-opacity-0"></span>
+                      </button>
+                    </a>
+            </template>
+    
+        </template> 
+
+    </div>
+
+    
+
+        
+        <section id="History" class="py-5">
+            <h1 class="font-bold text-center pb-5">Last activity of the community</h1>
+            {{ range .histories }}
+                {{ template "history.html" .}}
+            {{end}}
+        </section>
+
+    
+
+
+</main>  
+ 
 {{ template "footer.html" .}}

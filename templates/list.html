@@ -1,6 +1,42 @@
 {{ template "header.html" .}}
 
-    <div class="m-auto max-w-xl p-3">
+    <div class="mx-auto h-full max-w-xl px-3 w-full flex-grow">
+
+        {{ if eq .copyAlert true }}
+        <div x-data=" {show: true} " x-show="show" x-transition
+        class=" my-5 text-gray-600 font-medium flex mb-1 flex-row justify-between p-2 bg-gray-200 border-l-4 border-gray-500">
+            <div>⚠️ Warning! Save the URL if you want to acces this list later.</div>
+            <div x-on:click="show = ! show" 
+            class="flex items-center">✖️</div>
+        </div>
+        {{ end }}
+
+        <div x-data="{ open: false }" class="flex flex-row justify-between py-5 border-b">
+
+            <div>
+
+                <button class="font-bold" x-transition:enter.duration.500ms x-show="!open" x-on:click="open = ! open"
+                @click="$nextTick(() => { setTimeout(() => { document.getElementById('input_cat').focus(); }, 300);});"
+                >+ Category</button>
+
+                <form class="flex" x-transition:enter.duration.500ms x-show="open" hx-post="/{{.list.Url}}/category" hx-target="#list" hx-swap="beforeend">
+                    <input type="text" name="name" id="input_cat" required
+                    class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-gray-600 peer"
+                    >
+                    <button type="button" x-on:click="open = ! open">✖️</button>
+                    <button type="submit" x-on:click="open = ! open">✔️</button>
+                </form>
+
+            </div>
+
+            <button class="font-bold" id="copyUrl" value="{{.list.Url}}">
+                Copy URL 📋
+            </button>
+            
+
+            
+        
+        </div>
 
         <div id="list">
 
@@ -11,68 +47,59 @@
             {{end}}
     
         </div>
-
-        <div x-data="{ open: false }" class="flex flex-row justify-between mt-5">
-
-            <button class="font-bold" x-transition:enter.duration.500ms x-show="!open" x-on:click="open = ! open"
-            @click="$nextTick(() => { setTimeout(() => { document.getElementById('input_cat').focus(); }, 300);});"
-            >+ Category</button>
-
-            <form x-transition:enter.duration.500ms x-show="open" hx-post="/{{.list.Url}}/category" hx-target="#list" hx-swap="beforeend">
-                <input type="text" name="name" id="input_cat" required>
-                <button type="button" x-on:click="open = ! open">✖️</button>
-                <button type="submit" x-on:click="open = ! open">✔️</button>
-            </form>
-        
-        </div>
     
-        <section id="History" class="mt-10">
+        <section id="History" class="py-5">
             {{ range .histories }}
                 {{ template "history.html" .}}
             {{end}}
         </section>
+
     </div>
+
+    <script>
+        const text = document.getElementById('copyUrl');
+ 
+        text.addEventListener('click', () => {
+
+            const value = event.target.value;
+            
+            try {
+                navigator.clipboard.writeText(value);
+
+            const original = text.textContent;
+            text.textContent = 'Copied!';
+            text.classList.add('text-green-600');
+
+            setTimeout(() => {
+                text.textContent = original;
+                text.classList.remove('text-green-600');
+            }, 1000);
+            } catch(e) {
+                alert('Oops, unable to copy');    
+            }
+        });
+    </script>
+
+    <script>
+
+        if (localStorage.getItem('lists') === null) {
+            lists = ['{{.list.Url}}']
+            localStorage.setItem('lists', JSON.stringify(lists));
+        } else {
+            var lists = JSON.parse(localStorage.getItem("lists"))
+            if ( !lists.includes('{{.list.Url}}')) {
+
+                list = lists.push('{{.list.Url}}')
+                localStorage.setItem("lists", JSON.stringify(lists));
+            }
+        }
+
+    </script>
 
     
 
-    <script>
+    
 
-        document.body.addEventListener('htmx:afterRequest', (event) => {
-            var elements = document.getElementsByTagName("input");
-            for (var ii=0; ii < elements.length; ii++) {
-            if (elements[ii].type == "text" && elements[ii].classList.contains("iteminput")) {
-                elements[ii].value = "";
-            }
-            }
-
-            document.getElementById('input_cat').value = '';
-        })
-
-        // ADD ITEM TO HISTORY
-        document.body.addEventListener('htmx:afterRequest', (event) => {
-            console.log(event.detail.target)
-            if (event.detail.target.id != 'History') {
-                htmx.ajax('GET', '/{{.list.Url}}/history', {target:'#History', swap:'afterbegin'})
-            }            
-        })
-    </script>
-
-    <script>
-        function timeSince(date) {
-
-            now = Date.now();
-            seconds = (now - date) / 1000;
-
-            if (seconds < 60) {
-                return 'now'
-            } else if (seconds < 3600) {
-                return Math.floor(seconds/60) + "m"
-            } else if (seconds < 86400) {
-                return Math.floor(seconds/3600) + "h"
-            } else {
-                return Math.floor(seconds/86400) + "d"
-            }
-        }
-    </script>
+    
 
 {{ template "footer.html" .}}

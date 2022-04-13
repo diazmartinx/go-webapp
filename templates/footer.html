@@ -1,2 +1,45 @@
+<section class="py-5 flex justify-center border-t bottom-0.5">
+    <p>website 🛠️ by me</p>
+</section>
+
+<script>
+
+    document.body.addEventListener('htmx:afterRequest', (event) => {
+        var elements = document.getElementsByTagName("input");
+        for (var ii=0; ii < elements.length; ii++) {
+        if (elements[ii].type == "text" && elements[ii].classList.contains("iteminput")) {
+            elements[ii].value = "";
+        }
+        }
+
+        document.getElementById('input_cat').value = '';
+    })
+
+    // ADD ITEM TO HISTORY
+    document.body.addEventListener('htmx:afterRequest', (event) => {
+        console.log(event.detail.target)
+        if (event.detail.target.id != 'History') {
+            htmx.ajax('GET', '/{{.list.Url}}/history', {target:'#History', swap:'afterbegin'})
+        }            
+    })
+</script>
+
+<script>
+    function timeSince(date) {
+
+        now = Date.now();
+        seconds = (now - date) / 1000;
+
+        if (seconds < 60) {
+            return 'now'
+        } else if (seconds < 3600) {
+            return Math.floor(seconds/60) + "m"
+        } else if (seconds < 86400) {
+            return Math.floor(seconds/3600) + "h"
+        } else {
+            return Math.floor(seconds/86400) + "d"
+        }
+    }
+</script>
 </body>
 </html>

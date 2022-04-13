@@ -1,6 +1,7 @@
 package main
 
 func initializeRoutes() {
+
 	router.GET("/", Home)
 	router.POST("/", CreateList)
 	router.GET("/:url", ShowList)

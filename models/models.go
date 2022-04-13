@@ -22,10 +22,11 @@ type Category struct {
 
 type Item struct {
 	gorm.Model
-	Name       string
-	Url        string
-	Done       bool
-	CategoryID uint
+	Name         string
+	Url          string
+	Done         bool
+	CategoryID   uint
+	CreatedMilis int64 // in miliseconds, then converted to javascript time in frontend
 }
 
 type History struct {
