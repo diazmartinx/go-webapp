@@ -1,3 +1,0 @@
-// IMPLEMENT LIMITS IN DB -> no tiene sentido ;c
-done // IP RATE LIMIT MIDDLEWARE
-// FINISH HOME PAGE

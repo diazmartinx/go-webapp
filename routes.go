@@ -1,6 +1,6 @@
 package main
 
-func initializeRoutes() {
+func InitializeRoutes() {
 
 	router.GET("/", Home)
 	router.POST("/", CreateList)

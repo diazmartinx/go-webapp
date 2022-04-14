@@ -41,7 +41,7 @@ func main() {
 
 	router.LoadHTMLGlob("templates/*")
 
-	initializeRoutes()
+	InitializeRoutes()
 
 	router.Run()
 

@@ -1,4 +1,22 @@
-{{ template "header.html" .}}
+<!doctype html>
+<html>
+
+  <head>
+    <!--Use the title variable to set the title of the page-->
+    <title>{{ .title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+
+    <!-- packages -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.7.0" integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous" defer></script>
+    <meta name="robots" content="noindex">
+    
+
+  </head>
+
+  <body class="bg-gradient-to-b from-gray-50 to-gray-100 w-screen min-h-screen h-full flex flex-col">
 
     <div class="mx-auto h-full max-w-xl px-3 w-full flex-grow">
 
@@ -6,8 +24,8 @@
         <div x-data=" {show: true} " x-show="show" x-transition
         class=" my-5 text-gray-600 font-medium flex mb-1 flex-row justify-between p-2 bg-gray-200 border-l-4 border-gray-500">
             <div>⚠️ Warning! Save the URL if you want to acces this list later.</div>
-            <div x-on:click="show = ! show" 
-            class="flex items-center">✖️</div>
+            <button x-on:click="show = ! show" 
+            class="flex items-center">✖️</button>
         </div>
         {{ end }}
 
