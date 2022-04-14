@@ -1,1 +1,1 @@
-web: app.exe
+web: bin/app
