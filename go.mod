@@ -1,6 +1,7 @@
 module app
 
 go 1.18
+// +heroku goVersion go1.18
 
 require (
 	github.com/gin-gonic/gin v1.7.7
