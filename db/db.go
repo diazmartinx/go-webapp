@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -14,10 +13,12 @@ import (
 
 // DB SERVER (AWS)
 func dbvar() string {
-	err := godotenv.Load(".env")
-	if err != nil {
-		panic(err)
-	}
+
+	// THIS IS FOT GET THE ENV VARIABLES IN LOCAL, IN HEROKU IT IS DIFFERENT
+	//err := godotenv.Load(".env")
+	//if err != nil {
+	//	panic(err)
+	//}
 
 	DB_HOST := os.Getenv("DB_HOST")
 	DB_PORT := os.Getenv("DB_PORT")
