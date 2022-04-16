@@ -160,7 +160,7 @@ func Item(c *gin.Context) {
 
 			// -------------  ADD EVENT TO HISTORY --------------
 			var catChange models.CatChange
-			catChange.Title = "Deleted: " + item.Name
+			catChange.Title = item.Name
 			catChange.Url = url
 			catChange.TypeChange = 2
 			catChange.CategoryID = item.CategoryID
@@ -179,7 +179,7 @@ func Item(c *gin.Context) {
 
 			// -------------  ADD EVENT TO HISTORY ---------------
 			var catChange models.CatChange
-			catChange.Title = "Completed: " + item.Name
+			catChange.Title = item.Name
 			catChange.Url = url
 			catChange.TypeChange = 3
 			catChange.CategoryID = item.CategoryID

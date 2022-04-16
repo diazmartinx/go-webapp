@@ -13,7 +13,7 @@
                     >
 
                     <button type="button"  @click="$dispatch('set-open{{.ID}}', true); open = !open;">
-                        ✖️
+                        🔴
                     </button>
 
                     &nbsp;<button type="submit" @click="$dispatch('set-open{{.ID}}', true); open = !open;">
@@ -35,7 +35,7 @@
 
             <button class="hover:bg-gray-400"  hx-delete="/{{.Url}}/category/{{.ID}}" hx-target="closest section" hx-swap="delete"
             hx-confirm="Are you sure you wish to delete {{.Name}}?"
-            >✖️
+            >🔴
             </button>
 
         </div>
@@ -68,7 +68,7 @@
                 class="iteminput block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-gray-600 peer"
                 >
                 <input type="hidden" name="categoryName" value="{{.Name}}">
-                <button type="button" x-on:click="open = ! open">✖️</button>
+                <button type="button" x-on:click="open = ! open">🔴</button>
                 &nbsp;<button type="submit" x-on:click="open = ! open">🟢</button>
             </form>
         
