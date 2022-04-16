@@ -11,7 +11,7 @@
         <div class="flex flex-row">   
             <button class="text-sm text-green-700" x-data=" { time : timeSince( {{ .UpdatedAt }} )  }" x-text="time" x-init="setInterval(() => time = timeSince( {{ .UpdatedAt }} ), 10000)"></button>&nbsp;
 
-            <button x-on:click="show = false" class="hover:bg-gray-300" hx-delete="/{{.Url}}/item/{{.ID}}" hx-swap="afterbegin" hx-target="#Changes{{.CategoryID}}">
+            &nbsp;<button x-on:click="show = false" class="hover:bg-gray-300" hx-delete="/{{.Url}}/item/{{.ID}}" hx-swap="afterbegin" hx-target="#Changes{{.CategoryID}}">
                 ✖️
             </button> 
         </div>
