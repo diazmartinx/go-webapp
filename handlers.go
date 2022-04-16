@@ -6,7 +6,6 @@ import (
 	"app/models"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -42,58 +41,40 @@ func CreateList(c *gin.Context) {
 	list.Url = url
 	db.DB.Create(&list)
 
-	// CREATE DEFAULT CATEGORY :D
-	var categories = []models.Category{{Name: "🛒 Groceries", Url: url}, {Name: "🍺 Drinks", Url: url}}
-	db.DB.Create(&categories)
-
-	var histories = []models.History{{Url: url, Title: "Created: 🛒 Groceries", Changed: time.Now().UnixMilli(), TypeChange: 0},
-		{Url: url, Title: "Created: 🍺 Drinks", Changed: time.Now().UnixMilli(), TypeChange: 0}}
-	db.DB.Create(&histories)
-
 	c.Redirect(http.StatusMovedPermanently, "/"+url)
 	c.Abort()
 }
 
 func Home(c *gin.Context) {
-	var histories []models.History
-
-	db.DB.Order("changed desc").Limit(5).Find(&histories)
-	render(c, gin.H{"histories": histories}, "home.html")
+	render(c, gin.H{}, "home.html")
 }
 
 func ShowList(c *gin.Context) {
 	url := c.Param("url")
 	var list models.List
-	var histories []models.History
-	var deleteHistories []models.History
+	//var histories []models.CatChange
+	//var deleteHistories []models.CatChange
 	var copyAlert bool // DEFAULT -> FALSE
 
 	db.DB.Preload("Categories.Items").Where("url = ?", url).First(&list)
 
 	if list.ID != 0 {
 
-		db.DB.Where("url = ?", url).Order("changed desc").Limit(15).Find(&histories)
+		for i, cat := range list.Categories {
+			db.DB.Where("category_id = ?", cat.ID).Order("updated_at desc").Offset(5).Find(&list.Categories[i].CatChanges)
+			db.DB.Delete(&list.Categories[i].CatChanges) // NO ACUMULA MAS DE 5 EVENTOS
 
-		db.DB.Where("url = ?", url).Order("changed desc").Offset(15).Find(&deleteHistories)
-		db.DB.Delete(&deleteHistories) // Delete all history after 15
+			db.DB.Where("category_id = ?", cat.ID).Order("updated_at desc").Find(&list.Categories[i].CatChanges)
+		}
 
-		if len(histories) < 10 {
+		if true {
 			copyAlert = true
 		}
 
-		render(c, gin.H{"title": "Grocery List", "list": list, "histories": histories, "copyAlert": copyAlert}, "list.html")
+		render(c, gin.H{"title": "Grocery List", "list": list, "copyAlert": copyAlert}, "list.html")
 
 	}
 
-}
-
-func History(c *gin.Context) {
-	url := c.Param("url")
-	var history models.History
-
-	db.DB.Where("url = ?", url).Order("changed desc").First(&history)
-
-	c.HTML(http.StatusOK, "history.html", history)
 }
 
 func Category(c *gin.Context) {
@@ -110,20 +91,6 @@ func Category(c *gin.Context) {
 				Url:  url,
 			}
 			db.DB.Create(&newCat)
-			db.DB.Preload("Items").Find(&newCat)
-
-			// -------------  ADD EVENT TO HISTORY ---------------
-
-			history := models.History{
-				Url:        url,
-				Title:      "Created: '" + newCat.Name + "'",
-				Changed:    time.Now().UnixMilli(),
-				TypeChange: 0,
-			}
-
-			db.DB.Create(&history)
-
-			// --------------------------------------------------
 
 			c.HTML(http.StatusOK, "category.html", newCat)
 		}
@@ -132,49 +99,33 @@ func Category(c *gin.Context) {
 		{
 			id := c.Param("id")
 			var category models.Category
-			db.DB.Where("id = ?", id).First(&category)
-			db.DB.Unscoped().Delete(&category)
-
-			// -------------  ADD EVENT TO HISTORY ---------------
-
-			history := models.History{
-				Url:        url,
-				Title:      "Deleted: '" + category.Name + "'",
-				Changed:    time.Now().UnixMilli(),
-				TypeChange: 2,
-			}
-
-			db.DB.Create(&history)
-
-			// --------------------------------------------------
-
+			db.DB.Delete(&category, id)
 		}
 
 	case "PUT":
 		{
 			id := c.Param("id")
 			name := c.PostForm("name")
-			var category models.Category
 
-			db.DB.Preload("Items").Where("id = ?", id).First(&category)
+			var category models.Category
+			db.DB.First(&category, id)
+
 			oldname := category.Name
 			category.Name = name
 			db.DB.Save(&category)
 
-			// -------------  ADD EVENT TO HISTORY ---------------
+			// -------------  ADD EVENT TO HISTORY --------------
 
-			history := models.History{
-				Url:        url,
-				Title:      "Renamed: '" + oldname + "' to '" + category.Name + "'",
-				Changed:    time.Now().UnixMilli(),
-				TypeChange: 1,
-			}
-
-			db.DB.Create(&history)
+			var catChange models.CatChange
+			catChange.Title = "'" + oldname + "'" + " changed to '" + name + "'"
+			catChange.Url = url
+			catChange.TypeChange = 1
+			catChange.CategoryID = category.ID
+			db.DB.Create(&catChange)
 
 			// --------------------------------------------------
 
-			c.HTML(http.StatusOK, "category.html", category)
+			c.HTML(http.StatusOK, "history.html", catChange)
 		}
 
 	}
@@ -190,29 +141,12 @@ func Item(c *gin.Context) {
 			u64, _ := strconv.ParseUint(c.Param("idcat"), 10, 64)
 			id := uint(u64)
 			name := c.PostForm("name")
-			catName := c.PostForm("categoryName")
 			item := models.Item{
-				Name:         name,
-				CategoryID:   id,
-				Url:          url,
-				CreatedMilis: time.Now().UnixMilli(),
+				Name:       name,
+				CategoryID: id,
+				Url:        url,
 			}
 			db.DB.Create(&item)
-
-			// -------------  ADD EVENT TO HISTORY ---------------
-
-			history := models.History{
-				Url:        url,
-				Title:      "Created: '" + name + "' in '" + catName + "'",
-				Changed:    time.Now().UnixMilli(),
-				TypeChange: 0,
-			}
-
-			db.DB.Create(&history)
-
-			// --------------------------------------------------
-
-			db.DB.Create(&history)
 
 			c.HTML(http.StatusOK, "item.html", item)
 		}
@@ -224,21 +158,15 @@ func Item(c *gin.Context) {
 			db.DB.Where("id = ?", id).First(&item)
 			db.DB.Unscoped().Delete(&item)
 
-			var category models.Category
-			db.DB.Where("id = ?", item.CategoryID).First(&category)
-
-			// -------------  ADD EVENT TO HISTORY ---------------
-
-			history := models.History{
-				Url:        url,
-				Title:      "Deleted: '" + item.Name + "' from '" + category.Name + "'",
-				Changed:    time.Now().UnixMilli(),
-				TypeChange: 2,
-			}
-
-			db.DB.Create(&history)
-
+			// -------------  ADD EVENT TO HISTORY --------------
+			var catChange models.CatChange
+			catChange.Title = "Deleted: " + item.Name
+			catChange.Url = url
+			catChange.TypeChange = 2
+			catChange.CategoryID = item.CategoryID
+			db.DB.Create(&catChange)
 			// --------------------------------------------------
+			c.HTML(http.StatusOK, "history.html", catChange)
 		}
 	case "PATCH":
 		{
@@ -249,23 +177,16 @@ func Item(c *gin.Context) {
 			db.DB.Where("id = ?", id).First(&item)
 			db.DB.Unscoped().Delete(&item)
 
-			var category models.Category
-			db.DB.Where("id = ?", item.CategoryID).First(&category)
-
 			// -------------  ADD EVENT TO HISTORY ---------------
-
-			history := models.History{
-				Url:        url,
-				Title:      "Completed: '" + item.Name + "' in '" + category.Name + "'",
-				Changed:    time.Now().UnixMilli(),
-				TypeChange: 3,
-			}
-
-			db.DB.Create(&history)
-
+			var catChange models.CatChange
+			catChange.Title = "Completed: " + item.Name
+			catChange.Url = url
+			catChange.TypeChange = 3
+			catChange.CategoryID = item.CategoryID
+			db.DB.Create(&catChange)
 			// --------------------------------------------------
 
-			c.HTML(http.StatusOK, "history.html", history)
+			c.HTML(http.StatusOK, "history.html", catChange)
 		}
 	}
 }

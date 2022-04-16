@@ -1,6 +1,7 @@
 package main
 
 import (
+	"app/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,7 +16,7 @@ var router *gin.Engine
 func main() {
 
 	// IP RATE LIMITER
-	rate, err := limiter.NewRateFromFormatted("4-S")
+	rate, err := limiter.NewRateFromFormatted("240-M")
 	if err != nil {
 		panic(err)
 	}
@@ -25,10 +26,7 @@ func main() {
 	// END IP RATE LIMITER
 
 	// DB MIGRATIONS
-	//	models.MigrateItem()
-	//	models.MigrateCategory()
-	//	models.MigrateList()
-	//	models.MigrateHistory()
+	models.Migrate()
 	// END DB MIGRATIONS
 
 	router = gin.Default()
@@ -38,6 +36,7 @@ func main() {
 
 	//templ := template.Must(template.New("").ParseFS(embeddedFiles, "templates/*"))
 	//router.SetHTMLTemplate(templ)
+	router.Static("/assets", "./assets")
 
 	router.LoadHTMLGlob("templates/*")
 

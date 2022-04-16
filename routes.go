@@ -17,7 +17,4 @@ func InitializeRoutes() {
 	router.PUT("/:url/item/:iditem", Item)   // CHANGE NAME
 	router.PATCH("/:url/item/:iditem", Item) // CHANGE DONE
 
-	// HISTORY
-	router.GET("/:url/history", History)
-
 }

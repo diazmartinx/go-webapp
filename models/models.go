@@ -1,54 +1,43 @@
 package models
 
-import (
-	"app/db"
-
-	"gorm.io/gorm"
-)
+import "app/db"
 
 type List struct {
-	gorm.Model
-	Url        string
+	ID  uint   `gorm:"primaryKey"`
+	Url string `gorm:"not null; unique"`
+
+	UpdatedAt  int
 	Categories []Category `gorm:"foreignkey:Url;references:Url"`
-	//Histories  []History  `gorm:"foreignkey:Url;references:Url"` DIDNT WORK ? ;C
 }
 
 type Category struct {
-	gorm.Model
-	Name  string
-	Url   string
-	Items []Item `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	ID         uint `gorm:"primaryKey"`
+	Name       string
+	Url        string
+	UpdatedAt  int
+	Items      []Item      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	CatChanges []CatChange `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+}
+
+type CatChange struct {
+	ID         uint `gorm:"primaryKey"`
+	Title      string
+	Url        string
+	TypeChange int // 0(created) - 1(updated) - 2(deleted) - 3(done)
+
+	CategoryID uint
+	UpdatedAt  int
 }
 
 type Item struct {
-	gorm.Model
-	Name         string
-	Url          string
-	Done         bool
-	CategoryID   uint
-	CreatedMilis int64 // in miliseconds, then converted to javascript time in frontend
+	ID   int `gorm:"primaryKey"`
+	Name string
+	Url  string
+
+	CategoryID uint
+	UpdatedAt  int
 }
 
-type History struct {
-	ID         int `gorm:"primaryKey"`
-	Url        string
-	Title      string
-	Changed    int64 // in miliseconds, then converted to javascript time in frontend
-	TypeChange int   // 0(created) // 1(updated) // 2(deleted) // 3(done)
-}
-
-func MigrateCategory() {
-	db.DB.AutoMigrate(&Category{})
-}
-
-func MigrateList() {
-	db.DB.AutoMigrate(&List{})
-}
-
-func MigrateItem() {
-	db.DB.AutoMigrate(&Item{})
-}
-
-func MigrateHistory() {
-	db.DB.AutoMigrate(&History{})
+func Migrate() {
+	db.DB.AutoMigrate(&List{}, &Category{}, &Item{}, &CatChange{})
 }

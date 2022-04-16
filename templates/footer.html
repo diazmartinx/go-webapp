@@ -1,4 +1,4 @@
-<section class="py-5 flex justify-center border-t bottom-0.5">
+<section class="py-5 flex justify-center border-t border-gray-400 bottom-0.5">
     <p>website 🛠️ by me</p>
 </section>
 
@@ -15,20 +15,20 @@
         document.getElementById('input_cat').value = '';
     })
 
-    // ADD ITEM TO HISTORY
+    /* ADD ITEM TO HISTORY
     document.body.addEventListener('htmx:afterRequest', (event) => {
         console.log(event.detail.target)
         if (event.detail.target.id != 'History') {
             htmx.ajax('GET', '/{{.list.Url}}/history', {target:'#History', swap:'afterbegin'})
         }            
-    })
+    }) */
 </script>
 
 <script>
     function timeSince(date) {
 
         now = Date.now();
-        seconds = (now - date) / 1000;
+        seconds = now/1000 - date;
 
         if (seconds < 60) {
             return 'now'

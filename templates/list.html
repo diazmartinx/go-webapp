@@ -16,20 +16,20 @@
 
   </head>
 
-  <body class="bg-gradient-to-b from-gray-50 to-gray-100 w-screen min-h-screen h-full flex flex-col">
+  <body class="bg-gray-200 w-screen min-h-screen h-full flex flex-col">
 
     <div class="mx-auto h-full max-w-xl px-3 w-full flex-grow">
 
         {{ if eq .copyAlert true }}
         <div x-data=" {show: true} " x-show="show" x-transition
-        class=" my-5 text-gray-600 font-medium flex mb-1 flex-row justify-between p-2 bg-gray-200 border-l-4 border-gray-500">
+        class=" my-5 text-gray-600 font-medium flex mb-1 flex-row justify-between p-2 bg-gray-100 border-x-4 border-gray-500">
             <div>⚠️ Warning! Save the URL if you want to acces this list later.</div>
             <button x-on:click="show = ! show" 
             class="flex items-center">✖️</button>
         </div>
         {{ end }}
 
-        <div x-data="{ open: false }" class="flex flex-row justify-between py-5 border-b">
+        <div x-data="{ open: false }" class="flex flex-row justify-between border-x-4 border-gray-500 my-3 p-3 bg-gray-100">
 
             <div>
 
@@ -50,10 +50,7 @@
             <button class="font-bold" id="copyUrl" value="{{.list.Url}}">
                 Copy URL 📋
             </button>
-            
-
-            
-        
+              
         </div>
 
         <div id="list">
@@ -65,12 +62,8 @@
             {{end}}
     
         </div>
-    
-        <section id="History" class="py-5">
-            {{ range .histories }}
-                {{ template "history.html" .}}
-            {{end}}
-        </section>
+
+        
 
     </div>
 

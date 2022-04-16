@@ -1,18 +1,21 @@
-{{ if eq .Done false }}
-<article x-transition x-data="{ done: {{.Done}} }" x-show="!done" class="py-2 hover:bg-gray-100">
+<article x-transition class="py-2 hover:bg-gray-100" x-data=" {show: true} " x-show="show">
     <div class="flex flex-row justify-between ml-2">
 
-        <h3>◾ {{.Name}}</h3>
-    
+        <div>
+        <button x-on:click="show = false" class="hover:bg-gray-300" hx-patch="/{{.Url}}/item/{{.ID}}" hx-swap="afterbegin" hx-target="#Changes{{.CategoryID}}">
+            <input type="checkbox" class="w-4 h-4 text-green-600 bg-gray-100 rounded border-gray-300 focus:ring-green-500 focus:ring-2">
+        </button>
+        <span>{{.Name}}</span>
+    </div>
+
         <div class="flex flex-row">   
-            <button class="text-sm text-green-700" x-data=" { time : timeSince( {{ .CreatedMilis }} )  }" x-text="time" x-init="setInterval(() => time = timeSince( {{ .CreatedMilis }} ), 10000)"></button>&nbsp;
-    
-            <button x-on:click="done = ! done" class="hover:bg-gray-300" hx-patch="/{{.Url}}/item/{{.ID}}" hx-swap="afterbegin" hx-target="#History">✔️</button>
-    
-            <button class="hover:bg-gray-300" hx-delete="/{{.Url}}/item/{{.ID}}" hx-target="closest article" hx-swap="delete">✖️</button> 
+            <button class="text-sm text-green-700" x-data=" { time : timeSince( {{ .UpdatedAt }} )  }" x-text="time" x-init="setInterval(() => time = timeSince( {{ .UpdatedAt }} ), 10000)"></button>&nbsp;
+
+            <button x-on:click="show = false" class="hover:bg-gray-300" hx-delete="/{{.Url}}/item/{{.ID}}" hx-swap="afterbegin" hx-target="#Changes{{.CategoryID}}">
+                ✖️
+            </button> 
         </div>
     
     </div>
 </article>
-{{ end }}
 
